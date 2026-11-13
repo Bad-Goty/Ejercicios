@@ -3,12 +3,16 @@ package com.goty.ejercicio.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.goty.ejercicio.domain.model.Exercise
+import com.goty.ejercicio.domain.model.ThemeMode
 import com.goty.ejercicio.domain.usecase.GetExercisesUseCase
+import com.goty.ejercicio.domain.usecase.GetThemeModeUseCase
+import com.goty.ejercicio.domain.usecase.SetThemeModeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class HomeUiState(
@@ -19,6 +23,8 @@ data class HomeUiState(
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     getExercises: GetExercisesUseCase,
+    getThemeMode: GetThemeModeUseCase,
+    private val setThemeMode: SetThemeModeUseCase,
 ) : ViewModel() {
 
     val uiState: StateFlow<HomeUiState> = getExercises()
@@ -28,4 +34,16 @@ class HomeViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = HomeUiState(),
         )
+
+    // TODO: mover a SettingsViewModel cuando exista la pantalla de Configuraciones
+    val themeMode: StateFlow<ThemeMode> = getThemeMode()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = ThemeMode.SYSTEM,
+        )
+
+    fun onThemeModeChange(mode: ThemeMode) {
+        viewModelScope.launch { setThemeMode(mode) }
+    }
 }
