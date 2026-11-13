@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.goty.ejercicio.domain.model.ThemeMode
 import com.goty.ejercicio.ui.navigation.AppNavigation
 import com.goty.ejercicio.ui.theme.EjercicioTheme
+import com.goty.ejercicio.ui.theme.ThemeCrossfade
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -48,23 +49,26 @@ class MainActivity : ComponentActivity() {
                 ThemeMode.SYSTEM, null -> isSystemInDarkTheme()
             }
 
-            // Ajusta los íconos de la barra de estado/navegación al tema de la app
-            DisposableEffect(darkTheme) {
-                enableEdgeToEdge(
-                    statusBarStyle = SystemBarStyle.auto(
-                        Color.TRANSPARENT,
-                        Color.TRANSPARENT,
-                    ) { darkTheme },
-                    navigationBarStyle = SystemBarStyle.auto(
-                        LIGHT_SCRIM,
-                        DARK_SCRIM,
-                    ) { darkTheme },
-                )
-                onDispose {}
-            }
+            // Fundido con captura: cambia el tema sin recomponer en cada cuadro
+            ThemeCrossfade(darkTheme = darkTheme) { appliedDarkTheme ->
+                // Ajusta los íconos de la barra de estado/navegación al tema de la app
+                DisposableEffect(appliedDarkTheme) {
+                    enableEdgeToEdge(
+                        statusBarStyle = SystemBarStyle.auto(
+                            Color.TRANSPARENT,
+                            Color.TRANSPARENT,
+                        ) { appliedDarkTheme },
+                        navigationBarStyle = SystemBarStyle.auto(
+                            LIGHT_SCRIM,
+                            DARK_SCRIM,
+                        ) { appliedDarkTheme },
+                    )
+                    onDispose {}
+                }
 
-            EjercicioTheme(darkTheme = darkTheme) {
-                AppNavigation()
+                EjercicioTheme(darkTheme = appliedDarkTheme) {
+                    AppNavigation()
+                }
             }
         }
     }
