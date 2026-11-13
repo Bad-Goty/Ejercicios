@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Persona levantando una barra por encima de la cabeza (press militar).
+    Hace 3 repeticiones (1 s cada una, 3 s en total):
+      1ª repetición (0 - 1000 ms):    figura normal.
+      2ª repetición (1000 - 2000 ms): le crecen un poco los músculos.
+      3ª repetición (2000 - 3000 ms): se pone súper fuerte (más músculo + definición).
+    Los músculos crecen de forma animada mientras sube la barra.
+
+    Lienzo de 108dp: el contenido se mantiene dentro del círculo central
+    que muestra el Splash Screen (~66dp de diámetro).
+-->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="108dp"
+            android:height="108dp"
+            android:viewportWidth="108"
+            android:viewportHeight="108">
+
+            <!-- Piernas (se engrosan) -->
+            <path
+                android:name="legs"
+                android:pathData="M52,66 L49,82 L46,82 M56,66 L59,82 L62,82"
+                android:strokeWidth="4"
+                android:strokeColor="@color/splash_figure"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+
+            <!-- Torso (la espalda/hombros se ensanchan) -->
+            <path
+                android:name="torso"
+                android:fillColor="@color/splash_figure"
+                android:pathData="M47.5,50.5 L60.5,50.5 L58,67 L50,67 Z"
+                android:strokeWidth="1.5"
+                android:strokeColor="@color/splash_figure"
+                android:strokeLineJoin="round" />
+
+            <!-- Definición: pectorales y abdomen (aparecen en la 3ª repetición) -->
+            <path
+                android:name="definition"
+                android:pathData="M50,56.5 Q52,58.5 54,56.5 Q56,58.5 58,56.5 M54,53 L54,65 M51.5,60 L56.5,60 M52,63 L56,63"
+                android:strokeAlpha="0"
+                android:strokeWidth="0.8"
+                android:strokeColor="@color/splash_muscle_shade"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+
+            <!-- Cabeza -->
+            <path
+                android:fillColor="@color/splash_figure"
+                android:pathData="M54,45 m-4.5,0 a4.5,4.5 0 1,0 9,0 a4.5,4.5 0 1,0 -9,0" />
+
+            <!-- Brazos (hombro -> codo -> mano). Estado inicial: barra a la altura del pecho -->
+            <path
+                android:name="arms"
+                android:pathData="M49,52 L43,57 L45,48 M59,52 L65,57 L63,48"
+                android:strokeWidth="3"
+                android:strokeColor="@color/splash_figure"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+
+            <!-- Deltoides (hombros): empiezan con radio ~0 y se inflan -->
+            <path
+                android:name="deltoids"
+                android:fillColor="@color/splash_figure"
+                android:pathData="M46.99,52 a0.01,0.01 0 1,0 0.02,0 a0.01,0.01 0 1,0 -0.02,0 M60.99,52 a0.01,0.01 0 1,0 0.02,0 a0.01,0.01 0 1,0 -0.02,0" />
+
+            <!-- Barra con discos (dibujada arriba, desplazada hacia abajo al inicio) -->
+            <group
+                android:name="barbell"
+                android:translateY="14">
+                <path
+                    android:pathData="M38,34 L70,34"
+                    android:strokeWidth="2"
+                    android:strokeColor="@color/splash_barbell"
+                    android:strokeLineCap="round" />
+                <!-- Discos grandes -->
+                <path
+                    android:fillColor="@color/splash_barbell"
+                    android:pathData="M34,29 h4 v10 h-4 Z M70,29 h4 v10 h-4 Z" />
+                <!-- Discos pequeños -->
+                <path
+                    android:fillColor="@color/splash_barbell"
+                    android:pathData="M38,31 h2 v6 h-2 Z M68,31 h2 v6 h-2 Z" />
+            </group>
+        </vector>
+    </aapt:attr>
+
+    <!-- ===================== Repeticiones ===================== -->
+
+    <!-- Barra: sube y baja 3 veces (6 tramos de 500 ms) -->
+    <target android:name="barbell">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="500"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="translateY"
+                android:repeatCount="5"
+                android:repeatMode="reverse"
+                android:valueFrom="14"
+                android:valueTo="0"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+
+    <!-- Brazos: forma (suben/bajan 3 veces) + grosor (bíceps/tríceps crecen) -->
+    <target android:name="arms">
+        <aapt:attr name="android:animation">
+            <set android:ordering="together">
+                <objectAnimator
+                    android:duration="500"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:propertyName="pathData"
+                    android:repeatCount="5"
+                    android:repeatMode="reverse"
+                    android:valueFrom="M49,52 L43,57 L45,48 M59,52 L65,57 L63,48"
+                    android:valueTo="M49,52 L44,43 L46,34 M59,52 L64,43 L62,34"
+                    android:valueType="pathType" />
+                <set android:ordering="sequentially">
+                    <!-- 1ª repetición: sin cambios -->
+                    <objectAnimator
+                        android:duration="1000"
+                        android:propertyName="strokeWidth"
+                        android:valueFrom="3"
+                        android:valueTo="3"
+                        android:valueType="floatType" />
+                    <!-- 2ª repetición: un poco de músculo -->
+                    <objectAnimator
+                        android:duration="600"
+                        android:interpolator="@android:interpolator/fast_out_slow_in"
+                        android:propertyName="strokeWidth"
+                        android:valueFrom="3"
+                        android:valueTo="4"
+                        android:valueType="floatType" />
+                    <objectAnimator
+                        android:duration="400"
+                        android:propertyName="strokeWidth"
+                        android:valueFrom="4"
+                        android:valueTo="4"
+                        android:valueType="floatType" />
+                    <!-- 3ª repetición: súper fuerte -->
+                    <objectAnimator
+                        android:duration="600"
+                        android:interpolator="@android:interpolator/overshoot"
+                        android:propertyName="strokeWidth"
+                        android:valueFrom="4"
+                        android:valueTo="5.5"
+                        android:valueType="floatType" />
+                </set>
+            </set>
+        </aapt:attr>
+    </target>
+
+    <!-- ===================== Músculos ===================== -->
+
+    <!-- Piernas: se engrosan -->
+    <target android:name="legs">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="1000"
+                    android:propertyName="strokeWidth"
+                    android:valueFrom="4"
+                    android:valueTo="4"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="600"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:propertyName="strokeWidth"
+                    android:valueFrom="4"
+                    android:valueTo="4.8"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="400"
+                    android:propertyName="strokeWidth"
+                    android:valueFrom="4.8"
+                    android:valueTo="4.8"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="600"
+                    android:interpolator="@android:interpolator/overshoot"
+                    android:propertyName="strokeWidth"
+                    android:valueFrom="4.8"
+                    android:valueTo="6"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <!-- Torso: forma de V más ancha -->
+    <target android:name="torso">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="1000"
+                    android:propertyName="pathData"
+                    android:valueFrom="M47.5,50.5 L60.5,50.5 L58,67 L50,67 Z"
+                    android:valueTo="M47.5,50.5 L60.5,50.5 L58,67 L50,67 Z"
+                    android:valueType="pathType" />
+                <objectAnimator
+                    android:duration="600"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:propertyName="pathData"
+                    android:valueFrom="M47.5,50.5 L60.5,50.5 L58,67 L50,67 Z"
+                    android:valueTo="M46.5,50 L61.5,50 L58.2,67 L49.8,67 Z"
+                    android:valueType="pathType" />
+                <objectAnimator
+                    android:duration="400"
+                    android:propertyName="pathData"
+                    android:valueFrom="M46.5,50 L61.5,50 L58.2,67 L49.8,67 Z"
+                    android:valueTo="M46.5,50 L61.5,50 L58.2,67 L49.8,67 Z"
+                    android:valueType="pathType" />
+                <objectAnimator
+                    android:duration="600"
+                    android:interpolator="@android:interpolator/overshoot"
+                    android:propertyName="pathData"
+                    android:valueFrom="M46.5,50 L61.5,50 L58.2,67 L49.8,67 Z"
+                    android:valueTo="M44.5,49.5 L63.5,49.5 L58.5,67 L49.5,67 Z"
+                    android:valueType="pathType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <!-- Deltoides: se inflan (radio 0 -> 2 -> 3.5) -->
+    <target android:name="deltoids">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="1000"
+                    android:propertyName="pathData"
+                    android:valueFrom="M46.99,52 a0.01,0.01 0 1,0 0.02,0 a0.01,0.01 0 1,0 -0.02,0 M60.99,52 a0.01,0.01 0 1,0 0.02,0 a0.01,0.01 0 1,0 -0.02,0"
+                    android:valueTo="M46.99,52 a0.01,0.01 0 1,0 0.02,0 a0.01,0.01 0 1,0 -0.02,0 M60.99,52 a0.01,0.01 0 1,0 0.02,0 a0.01,0.01 0 1,0 -0.02,0"
+                    android:valueType="pathType" />
+                <objectAnimator
+                    android:duration="600"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:propertyName="pathData"
+                    android:valueFrom="M46.99,52 a0.01,0.01 0 1,0 0.02,0 a0.01,0.01 0 1,0 -0.02,0 M60.99,52 a0.01,0.01 0 1,0 0.02,0 a0.01,0.01 0 1,0 -0.02,0"
+                    android:valueTo="M45,52 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 M59,52 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0"
+                    android:valueType="pathType" />
+                <objectAnimator
+                    android:duration="400"
+                    android:propertyName="pathData"
+                    android:valueFrom="M45,52 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 M59,52 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0"
+                    android:valueTo="M45,52 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 M59,52 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0"
+                    android:valueType="pathType" />
+                <objectAnimator
+                    android:duration="600"
+                    android:interpolator="@android:interpolator/overshoot"
+                    android:propertyName="pathData"
+                    android:valueFrom="M45,52 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 M59,52 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0"
+                    android:valueTo="M43.5,52 a3.5,3.5 0 1,0 7,0 a3.5,3.5 0 1,0 -7,0 M57.5,52 a3.5,3.5 0 1,0 7,0 a3.5,3.5 0 1,0 -7,0"
+                    android:valueType="pathType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <!-- Definición (pectorales y abdomen): aparece solo en la 3ª repetición -->
+    <target android:name="definition">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="2000"
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="0"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="600"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:propertyName="strokeAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

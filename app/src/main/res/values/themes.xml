@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Ejercicio" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Tema del Splash: se muestra al iniciar y luego cambia a Theme.Ejercicio -->
+    <style name="Theme.Ejercicio.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/avd_splash_weightlifter</item>
+        <item name="windowSplashScreenAnimationDuration">3000</item>
+        <item name="postSplashScreenTheme">@style/Theme.Ejercicio</item>
+    </style>
+</resources>
