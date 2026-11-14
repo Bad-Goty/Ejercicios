@@ -6,3 +6,12 @@ import kotlinx.serialization.Serializable
 /** Destinos de la app. Deben ser @Serializable para que el back stack sobreviva a cambios de configuración. */
 @Serializable
 data object HomeRoute : NavKey
+
+@Serializable
+data object RoutinesRoute : NavKey
+
+@Serializable
+data object HistoryRoute : NavKey
+
+@Serializable
+data object SettingsRoute : NavKey
