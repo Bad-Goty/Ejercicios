@@ -76,6 +76,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.kotlinx.serialization.core)
 
+    // WorkManager: tareas en segundo plano aunque la app esté cerrada.
+    // Se usa para registrar los pasos periódicamente sin tener que abrir la app.
+    implementation(libs.androidx.work.runtime.ktx)
+
+    // Hilt + WorkManager: inyección de dependencias en los Workers (@HiltWorker).
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Personaje del Splash (versión estática, barra arriba), recortado a su contenido.
+    La barra usa un gris medio para verse bien en tema claro y oscuro.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="33dp"
+    android:height="44dp"
+    android:viewportWidth="44"
+    android:viewportHeight="58">
+
+    <group
+        android:translateX="-32"
+        android:translateY="-27">
+
+        <!-- Piernas -->
+        <path
+            android:pathData="M52,66 L49,82 L46,82 M56,66 L59,82 L62,82"
+            android:strokeWidth="4"
+            android:strokeColor="@color/splash_figure"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+
+        <!-- Torso -->
+        <path
+            android:fillColor="@color/splash_figure"
+            android:pathData="M47.5,50.5 L60.5,50.5 L58,67 L50,67 Z"
+            android:strokeWidth="1.5"
+            android:strokeColor="@color/splash_figure"
+            android:strokeLineJoin="round" />
+
+        <!-- Cabeza -->
+        <path
+            android:fillColor="@color/splash_figure"
+            android:pathData="M54,45 m-4.5,0 a4.5,4.5 0 1,0 9,0 a4.5,4.5 0 1,0 -9,0" />
+
+        <!-- Brazos arriba -->
+        <path
+            android:pathData="M49,52 L44,43 L46,34 M59,52 L64,43 L62,34"
+            android:strokeWidth="3"
+            android:strokeColor="@color/splash_figure"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+
+        <!-- Barra con discos -->
+        <path
+            android:pathData="M38,34 L70,34"
+            android:strokeWidth="2"
+            android:strokeColor="#FF78909C"
+            android:strokeLineCap="round" />
+        <path
+            android:fillColor="#FF78909C"
+            android:pathData="M34,29 h4 v10 h-4 Z M70,29 h4 v10 h-4 Z M38,31 h2 v6 h-2 Z M68,31 h2 v6 h-2 Z" />
+    </group>
+</vector>
