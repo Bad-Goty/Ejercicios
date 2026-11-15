@@ -1,6 +1,7 @@
 package com.goty.ejercicio.data.repository
 
-import com.goty.ejercicio.data.local.dao.ExerciseDao
+import com.goty.ejercicio.data.local.dao.EjercicioDao
+import com.goty.ejercicio.data.local.entity.Ejercicio
 import com.goty.ejercicio.data.mapper.toDomain
 import com.goty.ejercicio.data.mapper.toEntity
 import com.goty.ejercicio.domain.model.Exercise
@@ -10,13 +11,16 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ExerciseRepositoryImpl @Inject constructor(
-    private val dao: ExerciseDao,
+    private val dao: EjercicioDao,
 ) : ExerciseRepository {
 
     override fun getExercises(): Flow<List<Exercise>> =
-        dao.getAll().map { list -> list.map { it.toDomain() } }
+        dao.obtenerTodos().map { list -> list.map { it.toDomain() } }
 
     override suspend fun addExercise(exercise: Exercise) {
-        dao.insert(exercise.toEntity())
+        dao.insertar(exercise.toEntity())
     }
+
+    override suspend fun saveExercise(name: String, mainMuscleId: Long?, photoPath: String?): Long =
+        dao.insertarConMusculoPrincipal(Ejercicio(nombre = name, foto = photoPath), mainMuscleId)
 }

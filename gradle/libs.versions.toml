@@ -18,6 +18,7 @@ navigation3 = "1.2.1"
 kotlinxSerialization = "1.13.0"
 work = "2.12.0"
 hiltWork = "1.4.0"
+coil = "3.6.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -66,6 +67,14 @@ androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx"
 # en los Workers con @HiltWorker. El compilador genera el código de esa integración.
 androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltWork" }
+
+# Coil: carga imágenes en Compose desde archivos/URIs (AsyncImage) de forma eficiente
+# (en segundo plano, con caché y ajustando el tamaño). Lo usamos para mostrar la foto
+# del ejercicio elegida con el selector de fotos.
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+# Coil GIF: decodifica GIFs animados (en todas las versiones desde minSdk 24),
+# para que el GIF demostrativo del ejercicio se vea en movimiento.
+coil-gif = { group = "io.coil-kt.coil3", name = "coil-gif", version.ref = "coil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

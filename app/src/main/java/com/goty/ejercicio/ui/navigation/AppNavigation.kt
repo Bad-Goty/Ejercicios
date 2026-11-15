@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.goty.ejercicio.ui.addexercise.AddExerciseScreen
 import com.goty.ejercicio.ui.components.AppBottomBar
 import com.goty.ejercicio.ui.components.AppTopBar
 import com.goty.ejercicio.ui.history.HistoryScreen
@@ -22,6 +23,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
     val entryProvider = entryProvider {
         entry<HomeRoute> { HomeScreen() }
         entry<RoutinesRoute> { RoutinesScreen() }
+        entry<AddExerciseRoute> { AddExerciseScreen() }
         entry<HistoryRoute> { HistoryScreen() }
         entry<SettingsRoute> { SettingsScreen() }
     }

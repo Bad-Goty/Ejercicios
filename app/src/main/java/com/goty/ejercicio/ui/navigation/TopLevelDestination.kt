@@ -18,6 +18,7 @@ enum class TopLevelDestination(
 ) {
     HOME(HomeRoute, title = "Inicio", label = "Inicio", R.drawable.ic_nav_home),
     ROUTINES(RoutinesRoute, title = "Rutinas", label = "Rutinas", R.drawable.ic_nav_routines),
+    ADD_EXERCISE(AddExerciseRoute, title = "Agregar ejercicio", label = "Agregar", R.drawable.ic_nav_add),
     HISTORY(HistoryRoute, title = "Historial", label = "Historial", R.drawable.ic_nav_history),
     SETTINGS(SettingsRoute, title = "Configuraciones", label = "Ajustes", R.drawable.ic_nav_settings),
 }

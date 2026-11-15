@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Subescapular — vista frontal. Músculo profundo: zona aproximada (semitransparente) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="400dp"
+    android:viewportWidth="200"
+    android:viewportHeight="400">
+
+    <!-- ===== Silueta (vista frontal) ===== -->
+    <path android:fillColor="#E0E0E0" android:strokeColor="#9E9E9E" android:strokeWidth="2" android:strokeLineJoin="round"
+        android:pathData="M54,86 C44,88 38,98 37,112 L34,170 L28,240 C27,250 26,262 28,272 C30,280 40,280 41,272 L42,244 L48,174 L56,124 Z" />
+    <group android:scaleX="-1" android:pivotX="100">
+        <path android:fillColor="#E0E0E0" android:strokeColor="#9E9E9E" android:strokeWidth="2" android:strokeLineJoin="round"
+            android:pathData="M54,86 C44,88 38,98 37,112 L34,170 L28,240 C27,250 26,262 28,272 C30,280 40,280 41,272 L42,244 L48,174 L56,124 Z" />
+    </group>
+    <path android:fillColor="#E0E0E0" android:strokeColor="#9E9E9E" android:strokeWidth="2" android:strokeLineJoin="round"
+        android:pathData="M66,212 C64,240 66,270 70,300 C70,320 72,350 76,375 L74,388 C74,392 94,392 94,388 L93,375 C94,350 96,320 96,300 C98,270 100,240 99,215 Z" />
+    <group android:scaleX="-1" android:pivotX="100">
+        <path android:fillColor="#E0E0E0" android:strokeColor="#9E9E9E" android:strokeWidth="2" android:strokeLineJoin="round"
+            android:pathData="M66,212 C64,240 66,270 70,300 C70,320 72,350 76,375 L74,388 C74,392 94,392 94,388 L93,375 C94,350 96,320 96,300 C98,270 100,240 99,215 Z" />
+    </group>
+    <path android:fillColor="#E0E0E0" android:strokeColor="#9E9E9E" android:strokeWidth="2" android:strokeLineJoin="round"
+        android:pathData="M90,56 L110,56 L111,78 L89,78 Z" />
+    <path android:fillColor="#E0E0E0" android:strokeColor="#9E9E9E" android:strokeWidth="2" android:strokeLineJoin="round"
+        android:pathData="M90,72 L110,72 C125,74 140,76 148,84 C154,90 154,100 150,110 L140,140 C136,165 132,185 132,200 C136,210 138,218 136,226 L64,226 C62,218 64,210 68,200 C68,185 64,165 60,140 L50,110 C46,100 46,90 52,84 C60,76 75,74 90,72 Z" />
+    <path android:fillColor="#E0E0E0" android:strokeColor="#9E9E9E" android:strokeWidth="2"
+        android:pathData="M100,16 A22,22 0 1,1 100,60 A22,22 0 1,1 100,16 Z" />
+
+    <!-- ===== Músculo resaltado (profundo, detrás de la axila) ===== -->
+    <path android:fillColor="#E53935" android:fillAlpha="0.6"
+        android:pathData="M58,106 C66,108 72,118 72,132 C66,134 61,128 58,121 C56,116 56,110 58,106 Z" />
+    <group android:scaleX="-1" android:pivotX="100">
+        <path android:fillColor="#E53935" android:fillAlpha="0.6"
+            android:pathData="M58,106 C66,108 72,118 72,132 C66,134 61,128 58,121 C56,116 56,110 58,106 Z" />
+    </group>
+</vector>

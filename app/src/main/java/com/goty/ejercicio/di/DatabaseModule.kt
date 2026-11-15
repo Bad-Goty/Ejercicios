@@ -2,8 +2,12 @@ package com.goty.ejercicio.di
 
 import android.content.Context
 import androidx.room.Room
-import com.goty.ejercicio.data.local.EjercicioDatabase
-import com.goty.ejercicio.data.local.dao.ExerciseDao
+import com.goty.ejercicio.data.local.AppDatabase
+import com.goty.ejercicio.data.local.PrepopulateCallback
+import com.goty.ejercicio.data.local.dao.CategoriaDao
+import com.goty.ejercicio.data.local.dao.EjercicioDao
+import com.goty.ejercicio.data.local.dao.MusculoDao
+import com.goty.ejercicio.data.local.dao.RutinaDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,12 +19,23 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
+    /** @Singleton = una sola instancia en toda la app (reemplaza al getInstance clásico). */
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): EjercicioDatabase =
-        Room.databaseBuilder(context, EjercicioDatabase::class.java, EjercicioDatabase.NAME)
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
+        Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
+            .addCallback(PrepopulateCallback())
             .build()
 
     @Provides
-    fun provideExerciseDao(database: EjercicioDatabase): ExerciseDao = database.exerciseDao()
+    fun provideCategoriaDao(database: AppDatabase): CategoriaDao = database.categoriaDao()
+
+    @Provides
+    fun provideMusculoDao(database: AppDatabase): MusculoDao = database.musculoDao()
+
+    @Provides
+    fun provideEjercicioDao(database: AppDatabase): EjercicioDao = database.ejercicioDao()
+
+    @Provides
+    fun provideRutinaDao(database: AppDatabase): RutinaDao = database.rutinaDao()
 }

@@ -11,6 +11,9 @@ data object HomeRoute : NavKey
 data object RoutinesRoute : NavKey
 
 @Serializable
+data object AddExerciseRoute : NavKey
+
+@Serializable
 data object HistoryRoute : NavKey
 
 @Serializable
