@@ -1,8 +1,10 @@
 package com.goty.ejercicio.di
 
 import com.goty.ejercicio.data.repository.ExerciseRepositoryImpl
+import com.goty.ejercicio.data.repository.StepsRepositoryImpl
 import com.goty.ejercicio.data.repository.UserPreferencesRepositoryImpl
 import com.goty.ejercicio.domain.repository.ExerciseRepository
+import com.goty.ejercicio.domain.repository.StepsRepository
 import com.goty.ejercicio.domain.repository.UserPreferencesRepository
 import dagger.Binds
 import dagger.Module
@@ -23,4 +25,8 @@ abstract class RepositoryModule {
     abstract fun bindUserPreferencesRepository(
         impl: UserPreferencesRepositoryImpl,
     ): UserPreferencesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindStepsRepository(impl: StepsRepositoryImpl): StepsRepository
 }

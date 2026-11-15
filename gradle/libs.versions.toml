@@ -16,6 +16,8 @@ hiltLifecycleViewmodelCompose = "1.4.0"
 datastore = "1.3.0"
 navigation3 = "1.2.1"
 kotlinxSerialization = "1.13.0"
+work = "2.12.0"
+hiltWork = "1.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +55,17 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
 androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
+
+# WorkManager: tareas en segundo plano que se ejecutan aunque la app esté cerrada
+# y se reprograman solas tras reiniciar el teléfono.
+# Lo usamos para leer el sensor de pasos cada 15 min y guardar el conteo del día,
+# así los pasos se registran aunque no se abra la app.
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
+
+# Hilt + WorkManager: permite inyectar dependencias (StepsDataSource, StepCounterSensor)
+# en los Workers con @HiltWorker. El compilador genera el código de esa integración.
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltWork" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

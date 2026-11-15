@@ -12,3 +12,6 @@ val Pink40 = Color(0xFF7D5260)
 
 /** Naranja de la marca (el mismo del muñeco del Splash). Igual en tema claro y oscuro. */
 val BrandOrange = Color(0xFFFF6D00)
+
+/** Azul de acento (caminar). Igual en tema claro y oscuro. */
+val BrandBlue = Color(0xFF1E88E5)
