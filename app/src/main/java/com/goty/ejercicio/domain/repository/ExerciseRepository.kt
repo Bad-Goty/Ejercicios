@@ -7,4 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface ExerciseRepository {
     fun getExercises(): Flow<List<Exercise>>
     suspend fun addExercise(exercise: Exercise)
+
+    /**
+     * Guarda un ejercicio con su músculo principal y la ruta de su foto (ambos opcionales).
+     * Devuelve el id generado.
+     */
+    suspend fun saveExercise(name: String, mainMuscleId: Long?, photoPath: String?): Long
 }
