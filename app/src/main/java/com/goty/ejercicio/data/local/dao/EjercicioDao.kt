@@ -45,6 +45,25 @@ interface EjercicioDao {
     )
     fun obtenerTodosConMusculoPrincipal(): Flow<List<EjercicioConMusculoPrincipal>>
 
+    /**
+     * Ejercicios cuyo músculo principal pertenece a una categoría que toca ese día
+     * (1 = lunes ... 7 = domingo) en la primera rutina. Los que no tienen músculo principal no salen.
+     */
+    @Query(
+        """
+        SELECT e.*, m.nombre AS musculoNombre, m.foto AS musculoFoto FROM ejercicios e
+        INNER JOIN ejercicio_musculo em ON em.ejercicioId = e.id AND em.esPrincipal = 1
+        INNER JOIN musculos m ON m.id = em.musculoId
+        WHERE m.categoriaId IN (
+            SELECT rd.categoriaId FROM rutina_dia rd
+            WHERE rd.diaSemana = :diaSemana
+              AND rd.rutinaId = (SELECT id FROM rutinas ORDER BY id ASC LIMIT 1)
+        )
+        ORDER BY e.nombre ASC
+        """
+    )
+    fun obtenerDelDiaConMusculoPrincipal(diaSemana: Int): Flow<List<EjercicioConMusculoPrincipal>>
+
     @Transaction
     @Query("SELECT * FROM ejercicios WHERE id = :id")
     fun obtenerConMusculos(id: Long): Flow<EjercicioConMusculos?>

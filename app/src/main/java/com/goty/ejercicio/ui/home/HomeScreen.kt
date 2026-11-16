@@ -190,7 +190,7 @@ fun HomeContent(
                         .fillMaxWidth()
                         .padding(top = 48.dp),
                     contentAlignment = Alignment.Center,
-                ) { Text("Aún no hay ejercicios registrados") }
+                ) { Text("Hoy no hay ejercicios en tu rutina") }
             }
 
             else -> items(uiState.exercises, key = { it.id }) { exercise ->

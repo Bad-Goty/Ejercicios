@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.Flow
 /** Contrato del repositorio. La capa data lo implementa. */
 interface ExerciseRepository {
     fun getExercises(): Flow<List<Exercise>>
+
+    /** Ejercicios de las categorías que tocan ese día en la rutina (1 = lunes … 7 = domingo). */
+    fun getExercisesForDay(dayOfWeek: Int): Flow<List<Exercise>>
     suspend fun addExercise(exercise: Exercise)
 
     /**
