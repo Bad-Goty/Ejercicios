@@ -5,6 +5,13 @@
     <!-- Necesario para leer el sensor de pasos (Android 10+) -->
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
+    <!-- Notificación del descanso entre series (Android 13+ la pide al usuario) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Vibrar al terminar el descanso -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Avisar justo al terminar el descanso aunque la app esté cerrada ("Alarmas y recordatorios") -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <application
         android:name=".EjercicioApplication"
         android:allowBackup="true"
@@ -27,6 +34,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Recibe la alarma de fin de descanso (no se expone a otras apps) -->
+        <receiver
+            android:name=".data.timer.RestTimerReceiver"
+            android:exported="false" />
 
         <!--
             WorkManager se configura en EjercicioApplication (con HiltWorkerFactory),

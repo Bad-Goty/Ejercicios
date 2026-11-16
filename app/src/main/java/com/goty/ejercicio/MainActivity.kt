@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.goty.ejercicio.data.timer.RestTimerAppLifecycle
 import com.goty.ejercicio.domain.model.ThemeMode
 import com.goty.ejercicio.ui.navigation.AppNavigation
 import com.goty.ejercicio.ui.theme.EjercicioTheme
@@ -20,11 +21,16 @@ import com.goty.ejercicio.ui.theme.ThemeCrossfade
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+
+    /** Muestra/oculta la notificación del descanso al salir/volver a la app. */
+    @Inject
+    lateinit var restTimerAppLifecycle: RestTimerAppLifecycle
 
     // Mantiene el splash visible un momento para que se vea la animación
     private var keepSplash = true
@@ -71,6 +77,17 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        restTimerAppLifecycle.onAppForeground()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Al girar la pantalla también pasa por onStop: ahí no hay que mostrar la notificación
+        if (!isChangingConfigurations) restTimerAppLifecycle.onAppBackground()
     }
 
     private companion object {

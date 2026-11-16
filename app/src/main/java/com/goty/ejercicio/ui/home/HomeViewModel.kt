@@ -5,13 +5,20 @@ import androidx.lifecycle.viewModelScope
 import com.goty.ejercicio.domain.model.Exercise
 import com.goty.ejercicio.domain.usecase.GetExercisesUseCase
 import com.goty.ejercicio.domain.usecase.GetStepGoalUseCase
+import com.goty.ejercicio.domain.usecase.ObserveRestTimerUseCase
+import com.goty.ejercicio.domain.usecase.ObserveTodayCompletedSetsUseCase
 import com.goty.ejercicio.domain.usecase.ObserveTodayStepsUseCase
+import com.goty.ejercicio.domain.usecase.SetSetCompletedUseCase
 import com.goty.ejercicio.domain.usecase.SetStepGoalUseCase
+import com.goty.ejercicio.domain.usecase.StartRestTimerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -25,6 +32,8 @@ import javax.inject.Inject
 data class HomeUiState(
     val isLoading: Boolean = true,
     val exercises: List<Exercise> = emptyList(),
+    /** Series completadas hoy: id del ejercicio -> números de serie hechos (vienen de Room). */
+    val completedSets: Map<Long, Set<Int>> = emptyMap(),
 )
 
 enum class StepTrackingStatus {
@@ -45,16 +54,28 @@ data class StepsUiState(
     val status: StepTrackingStatus = StepTrackingStatus.TRACKING,
 )
 
+/** Temporizador de descanso entre series. null = no hay descanso en curso. */
+data class RestTimerState(
+    val secondsLeft: Int,
+    val totalSeconds: Int,
+)
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     getExercises: GetExercisesUseCase,
+    observeTodayCompletedSets: ObserveTodayCompletedSetsUseCase,
+    private val setSetCompleted: SetSetCompletedUseCase,
     private val observeTodaySteps: ObserveTodayStepsUseCase,
     getStepGoal: GetStepGoalUseCase,
     private val setStepGoal: SetStepGoalUseCase,
+    observeRestTimer: ObserveRestTimerUseCase,
+    private val startRestTimer: StartRestTimerUseCase,
 ) : ViewModel() {
 
-    val uiState: StateFlow<HomeUiState> = getExercises()
-        .map { HomeUiState(isLoading = false, exercises = it) }
+    val uiState: StateFlow<HomeUiState> =
+        combine(getExercises(), observeTodayCompletedSets()) { exercises, completed ->
+            HomeUiState(isLoading = false, exercises = exercises, completedSets = completed)
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -99,6 +120,52 @@ class HomeViewModel @Inject constructor(
 
     fun onStepGoalChange(goal: Int) {
         viewModelScope.launch { setStepGoal(goal) }
+    }
+
+    // --- Descanso entre series ---
+
+    /**
+     * Descanso en curso con los segundos que faltan. Sale de lo guardado, así que si se cierra
+     * la app y se vuelve a abrir, sigue donde iba. null = no hay descanso.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val restTimer: StateFlow<RestTimerState?> = observeRestTimer()
+        .flatMapLatest { timer ->
+            if (timer == null) {
+                flowOf<RestTimerState?>(null)
+            } else {
+                flow<RestTimerState?> {
+                    while (true) {
+                        val left = ((timer.endAtMillis - System.currentTimeMillis() + 999) / 1_000).toInt()
+                        if (left <= 0) break
+                        emit(RestTimerState(secondsLeft = left, totalSeconds = timer.totalSeconds))
+                        delay(200)
+                    }
+                    emit(null)
+                }
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = null,
+        )
+
+    /**
+     * Marca o desmarca una serie de hoy. Se guarda en Room, así no se pierde al cerrar la app.
+     * Al completarla empieza el descanso.
+     */
+    fun onSetCheckedChange(exerciseId: Long, setNumber: Int, reps: Int, completed: Boolean) {
+        viewModelScope.launch {
+            setSetCompleted(exerciseId, setNumber, reps, completed)
+            // Empieza el descanso: se guarda y se programa el aviso de fin (aunque se cierre la app)
+            if (completed) startRestTimer(REST_SECONDS)
+        }
+    }
+
+    companion object {
+        /** Duración del descanso. Más adelante se podrá configurar. */
+        const val REST_SECONDS = 60
     }
 }
 
