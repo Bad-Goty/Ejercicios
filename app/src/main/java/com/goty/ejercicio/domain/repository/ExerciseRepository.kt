@@ -9,8 +9,14 @@ interface ExerciseRepository {
     suspend fun addExercise(exercise: Exercise)
 
     /**
-     * Guarda un ejercicio con su músculo principal y la ruta de su foto (ambos opcionales).
-     * Devuelve el id generado.
+     * Guarda un ejercicio con sus series y repeticiones, su músculo principal y la ruta
+     * de su foto (estos dos opcionales). Devuelve el id generado.
      */
-    suspend fun saveExercise(name: String, mainMuscleId: Long?, photoPath: String?): Long
+    suspend fun saveExercise(
+        name: String,
+        series: Int,
+        reps: Int,
+        mainMuscleId: Long?,
+        photoPath: String?,
+    ): Long
 }

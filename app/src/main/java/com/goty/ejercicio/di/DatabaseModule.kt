@@ -3,11 +3,14 @@ package com.goty.ejercicio.di
 import android.content.Context
 import androidx.room.Room
 import com.goty.ejercicio.data.local.AppDatabase
+import com.goty.ejercicio.data.local.MIGRATION_1_2
+import com.goty.ejercicio.data.local.MIGRATION_2_3
 import com.goty.ejercicio.data.local.PrepopulateCallback
 import com.goty.ejercicio.data.local.dao.CategoriaDao
 import com.goty.ejercicio.data.local.dao.EjercicioDao
 import com.goty.ejercicio.data.local.dao.MusculoDao
 import com.goty.ejercicio.data.local.dao.RutinaDao
+import com.goty.ejercicio.data.local.dao.SerieCompletadaDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +28,7 @@ object DatabaseModule {
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
             .addCallback(PrepopulateCallback())
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
             .build()
 
     @Provides
@@ -38,4 +42,8 @@ object DatabaseModule {
 
     @Provides
     fun provideRutinaDao(database: AppDatabase): RutinaDao = database.rutinaDao()
+
+    @Provides
+    fun provideSerieCompletadaDao(database: AppDatabase): SerieCompletadaDao =
+        database.serieCompletadaDao()
 }

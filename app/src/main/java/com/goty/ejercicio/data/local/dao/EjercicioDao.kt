@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.goty.ejercicio.data.local.entity.Ejercicio
 import com.goty.ejercicio.data.local.entity.EjercicioMusculo
+import com.goty.ejercicio.data.local.relation.EjercicioConMusculoPrincipal
 import com.goty.ejercicio.data.local.relation.EjercicioConMusculos
 import kotlinx.coroutines.flow.Flow
 
@@ -32,6 +33,17 @@ interface EjercicioDao {
 
     @Query("SELECT * FROM ejercicios ORDER BY nombre ASC")
     fun obtenerTodos(): Flow<List<Ejercicio>>
+
+    /** Todos los ejercicios con el nombre e imagen de su músculo principal (null si no tiene). */
+    @Query(
+        """
+        SELECT e.*, m.nombre AS musculoNombre, m.foto AS musculoFoto FROM ejercicios e
+        LEFT JOIN ejercicio_musculo em ON em.ejercicioId = e.id AND em.esPrincipal = 1
+        LEFT JOIN musculos m ON m.id = em.musculoId
+        ORDER BY e.nombre ASC
+        """
+    )
+    fun obtenerTodosConMusculoPrincipal(): Flow<List<EjercicioConMusculoPrincipal>>
 
     @Transaction
     @Query("SELECT * FROM ejercicios WHERE id = :id")

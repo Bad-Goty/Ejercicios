@@ -15,12 +15,20 @@ class ExerciseRepositoryImpl @Inject constructor(
 ) : ExerciseRepository {
 
     override fun getExercises(): Flow<List<Exercise>> =
-        dao.obtenerTodos().map { list -> list.map { it.toDomain() } }
+        dao.obtenerTodosConMusculoPrincipal().map { list -> list.map { it.toDomain() } }
 
     override suspend fun addExercise(exercise: Exercise) {
         dao.insertar(exercise.toEntity())
     }
 
-    override suspend fun saveExercise(name: String, mainMuscleId: Long?, photoPath: String?): Long =
-        dao.insertarConMusculoPrincipal(Ejercicio(nombre = name, foto = photoPath), mainMuscleId)
+    override suspend fun saveExercise(
+        name: String,
+        series: Int,
+        reps: Int,
+        mainMuscleId: Long?,
+        photoPath: String?,
+    ): Long = dao.insertarConMusculoPrincipal(
+        Ejercicio(nombre = name, series = series, repeticiones = reps, foto = photoPath),
+        mainMuscleId,
+    )
 }

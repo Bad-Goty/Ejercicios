@@ -3,12 +3,14 @@ package com.goty.ejercicio.data.local.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.goty.ejercicio.data.local.entity.Categoria
 import com.goty.ejercicio.data.local.entity.Rutina
-import com.goty.ejercicio.data.local.entity.RutinaEjercicio
-import com.goty.ejercicio.data.local.relation.RutinaConEjercicios
+import com.goty.ejercicio.data.local.entity.RutinaDia
+import com.goty.ejercicio.data.local.relation.RutinaConDias
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -23,37 +25,49 @@ interface RutinaDao {
     @Update
     suspend fun actualizar(rutina: Rutina)
 
-    /** Borra también sus filas de rutina_ejercicio (CASCADE). */
+    /** Borra también sus días (CASCADE). */
     @Delete
     suspend fun eliminar(rutina: Rutina)
 
     @Query("SELECT * FROM rutinas ORDER BY nombre ASC")
     fun obtenerTodas(): Flow<List<Rutina>>
 
-    // --- Ejercicios dentro de una rutina ---
+    // --- Qué categoría toca cada día ---
 
-    @Insert
-    suspend fun agregarEjercicio(rutinaEjercicio: RutinaEjercicio): Long
-
-    /** Para cambiar series, reps, descanso u orden. */
-    @Update
-    suspend fun actualizarEjercicio(rutinaEjercicio: RutinaEjercicio)
+    /** Asigna una categoría a un día. Si ya estaba asignada, no hace nada. */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun asignarCategoria(rutinaDia: RutinaDia)
 
     @Delete
-    suspend fun quitarEjercicio(rutinaEjercicio: RutinaEjercicio)
+    suspend fun quitarCategoria(rutinaDia: RutinaDia)
 
-    // --- Rutina con sus ejercicios ---
+    /** Categorías que tocan un día (1 = lunes ... 7 = domingo). */
+    @Query(
+        """
+        SELECT c.* FROM categorias c
+        INNER JOIN rutina_dia rd ON rd.categoriaId = c.id
+        WHERE rd.rutinaId = :rutinaId AND rd.diaSemana = :diaSemana
+        ORDER BY c.id ASC
+        """
+    )
+    fun obtenerCategoriasDelDia(rutinaId: Long, diaSemana: Int): Flow<List<Categoria>>
+
+    // --- Rutina con sus días ---
 
     @Transaction
     @Query("SELECT * FROM rutinas WHERE id = :id")
-    fun obtenerConEjerciciosSinOrden(id: Long): Flow<RutinaConEjercicios?>
+    fun obtenerConDiasSinOrden(id: Long): Flow<RutinaConDias?>
 
     /**
-     * Rutina con sus ejercicios ordenados por "orden".
+     * Rutina con sus días ordenados de lunes a domingo.
      * @Relation no permite ORDER BY, por eso se ordena aquí.
      */
-    fun obtenerConEjercicios(id: Long): Flow<RutinaConEjercicios?> =
-        obtenerConEjerciciosSinOrden(id).map { rutina ->
-            rutina?.copy(ejercicios = rutina.ejercicios.sortedBy { it.rutinaEjercicio.orden })
+    fun obtenerConDias(id: Long): Flow<RutinaConDias?> =
+        obtenerConDiasSinOrden(id).map { rutina ->
+            rutina?.copy(
+                dias = rutina.dias.sortedWith(
+                    compareBy({ it.rutinaDia.diaSemana }, { it.rutinaDia.categoriaId })
+                )
+            )
         }
 }

@@ -4,10 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-/**
- * Ejercicio del catálogo. Las series/repeticiones NO van aquí, van en [RutinaEjercicio],
- * porque el mismo ejercicio puede hacerse distinto en cada rutina.
- */
+/** Ejercicio del catálogo, con las series y repeticiones que se definen al crearlo. */
 @Entity(tableName = "ejercicios")
 data class Ejercicio(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
@@ -22,4 +19,10 @@ data class Ejercicio(
     val foto: String? = null,
     @ColumnInfo(defaultValue = "0")
     val esFavorito: Boolean = false,
+    /** Número de series. */
+    @ColumnInfo(defaultValue = "4")
+    val series: Int = 4,
+    /** Repeticiones por serie. */
+    @ColumnInfo(defaultValue = "12")
+    val repeticiones: Int = 12,
 )

@@ -48,10 +48,12 @@ class SaveExerciseTest {
 
     @Test
     fun guardaEjercicioConMusculoPrincipal() = runBlocking {
-        val id = saveExercise("  Curl de bíceps  ", mainMuscleId = 21) // 21 = Bíceps braquial
+        val id = saveExercise("  Curl de bíceps  ", series = 3, reps = 10, mainMuscleId = 21) // 21 = Bíceps braquial
 
         val guardado = dao.obtenerConMusculos(id).first()!!
         assertEquals("Curl de bíceps", guardado.ejercicio.nombre) // sin espacios sobrantes
+        assertEquals(3, guardado.ejercicio.series)
+        assertEquals(10, guardado.ejercicio.repeticiones)
         assertEquals(listOf("Bíceps braquial"), guardado.musculos.map { it.nombre })
 
         val esPrincipal = db.openHelper.readableDatabase
@@ -62,7 +64,7 @@ class SaveExerciseTest {
 
     @Test
     fun guardaEjercicioSinMusculo() = runBlocking {
-        val id = saveExercise("Plancha", mainMuscleId = null)
+        val id = saveExercise("Plancha", series = 4, reps = 12, mainMuscleId = null)
 
         val guardado = dao.obtenerConMusculos(id).first()!!
         assertEquals("Plancha", guardado.ejercicio.nombre)
@@ -71,7 +73,7 @@ class SaveExerciseTest {
 
     @Test
     fun guardaLaRutaDeLaImagen() = runBlocking {
-        val id = saveExercise("Sentadilla", mainMuscleId = 29, imageUri = "content://media/foto.gif")
+        val id = saveExercise("Sentadilla", series = 4, reps = 12, mainMuscleId = 29, imageUri = "content://media/foto.gif")
 
         val guardado = dao.obtenerConMusculos(id).first()!!
         assertEquals("/fake/exercise_media/foto.gif", guardado.ejercicio.foto)
@@ -79,6 +81,11 @@ class SaveExerciseTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun noGuardaSinNombre() {
-        runBlocking { saveExercise("   ", mainMuscleId = 21) }
+        runBlocking { saveExercise("   ", series = 4, reps = 12, mainMuscleId = 21) }
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun noGuardaConCeroSeries() {
+        runBlocking { saveExercise("Remo", series = 0, reps = 12, mainMuscleId = 6) }
     }
 }

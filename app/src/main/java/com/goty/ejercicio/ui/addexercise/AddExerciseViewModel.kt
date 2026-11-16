@@ -104,7 +104,15 @@ class AddExerciseViewModel @Inject constructor(
         }
         form.update { it.copy(isSaving = true) }
         viewModelScope.launch {
-            runCatching { saveExercise(current.name, current.selectedMuscle?.id, current.imageUri) }
+            runCatching {
+                saveExercise(
+                    name = current.name,
+                    series = current.series,
+                    reps = current.reps,
+                    mainMuscleId = current.selectedMuscle?.id,
+                    imageUri = current.imageUri,
+                )
+            }
                 .onSuccess {
                     form.value = AddExerciseForm() // limpia el formulario
                     _events.send(AddExerciseEvent.Saved)
