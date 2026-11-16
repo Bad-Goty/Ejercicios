@@ -32,6 +32,13 @@ interface RutinaDao {
     @Query("SELECT * FROM rutinas ORDER BY nombre ASC")
     fun obtenerTodas(): Flow<List<Rutina>>
 
+    /** Id de la primera rutina creada (la que usa la app por ahora), o null si no hay. */
+    @Query("SELECT id FROM rutinas ORDER BY id ASC LIMIT 1")
+    fun observarPrimeraId(): Flow<Long?>
+
+    @Query("SELECT id FROM rutinas ORDER BY id ASC LIMIT 1")
+    suspend fun obtenerPrimeraId(): Long?
+
     // --- Qué categoría toca cada día ---
 
     /** Asigna una categoría a un día. Si ya estaba asignada, no hace nada. */

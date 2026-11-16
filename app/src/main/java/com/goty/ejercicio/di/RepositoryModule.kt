@@ -4,6 +4,7 @@ import com.goty.ejercicio.data.repository.ExerciseImageRepositoryImpl
 import com.goty.ejercicio.data.repository.ExerciseRepositoryImpl
 import com.goty.ejercicio.data.repository.MuscleRepositoryImpl
 import com.goty.ejercicio.data.repository.RestTimerRepositoryImpl
+import com.goty.ejercicio.data.repository.RoutineRepositoryImpl
 import com.goty.ejercicio.data.repository.StepsRepositoryImpl
 import com.goty.ejercicio.data.repository.UserPreferencesRepositoryImpl
 import com.goty.ejercicio.data.repository.WorkoutLogRepositoryImpl
@@ -11,6 +12,7 @@ import com.goty.ejercicio.domain.repository.ExerciseImageRepository
 import com.goty.ejercicio.domain.repository.ExerciseRepository
 import com.goty.ejercicio.domain.repository.MuscleRepository
 import com.goty.ejercicio.domain.repository.RestTimerRepository
+import com.goty.ejercicio.domain.repository.RoutineRepository
 import com.goty.ejercicio.domain.repository.StepsRepository
 import com.goty.ejercicio.domain.repository.UserPreferencesRepository
 import com.goty.ejercicio.domain.repository.WorkoutLogRepository
@@ -55,4 +57,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindRestTimerRepository(impl: RestTimerRepositoryImpl): RestTimerRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindRoutineRepository(impl: RoutineRepositoryImpl): RoutineRepository
 }

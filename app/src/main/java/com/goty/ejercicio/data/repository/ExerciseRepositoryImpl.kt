@@ -17,6 +17,9 @@ class ExerciseRepositoryImpl @Inject constructor(
     override fun getExercises(): Flow<List<Exercise>> =
         dao.obtenerTodosConMusculoPrincipal().map { list -> list.map { it.toDomain() } }
 
+    override fun getExercisesForDay(dayOfWeek: Int): Flow<List<Exercise>> =
+        dao.obtenerDelDiaConMusculoPrincipal(dayOfWeek).map { list -> list.map { it.toDomain() } }
+
     override suspend fun addExercise(exercise: Exercise) {
         dao.insertar(exercise.toEntity())
     }

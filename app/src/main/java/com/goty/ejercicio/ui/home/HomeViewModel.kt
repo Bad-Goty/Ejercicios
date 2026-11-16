@@ -3,7 +3,7 @@ package com.goty.ejercicio.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.goty.ejercicio.domain.model.Exercise
-import com.goty.ejercicio.domain.usecase.GetExercisesUseCase
+import com.goty.ejercicio.domain.usecase.GetTodayExercisesUseCase
 import com.goty.ejercicio.domain.usecase.GetStepGoalUseCase
 import com.goty.ejercicio.domain.usecase.ObserveRestTimerUseCase
 import com.goty.ejercicio.domain.usecase.ObserveTodayCompletedSetsUseCase
@@ -62,7 +62,7 @@ data class RestTimerState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    getExercises: GetExercisesUseCase,
+    getTodayExercises: GetTodayExercisesUseCase,
     observeTodayCompletedSets: ObserveTodayCompletedSetsUseCase,
     private val setSetCompleted: SetSetCompletedUseCase,
     private val observeTodaySteps: ObserveTodayStepsUseCase,
@@ -73,7 +73,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val uiState: StateFlow<HomeUiState> =
-        combine(getExercises(), observeTodayCompletedSets()) { exercises, completed ->
+        // Solo los ejercicios de las categorías que tocan hoy en Rutinas
+        combine(getTodayExercises(), observeTodayCompletedSets()) { exercises, completed ->
             HomeUiState(isLoading = false, exercises = exercises, completedSets = completed)
         }
         .stateIn(
